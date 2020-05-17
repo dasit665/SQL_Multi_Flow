@@ -38,6 +38,9 @@
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelThreads = new System.Windows.Forms.Label();
+            this.numericUpDownThreads = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreads)).BeginInit();
             this.SuspendLayout();
             // 
             // labelServer
@@ -106,7 +109,7 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(15, 124);
+            this.buttonOK.Location = new System.Drawing.Point(15, 146);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(124, 23);
             this.buttonOK.TabIndex = 8;
@@ -117,7 +120,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(148, 124);
+            this.buttonCancel.Location = new System.Drawing.Point(148, 146);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(124, 23);
             this.buttonCancel.TabIndex = 9;
@@ -125,13 +128,43 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // labelThreads
+            // 
+            this.labelThreads.AutoSize = true;
+            this.labelThreads.Location = new System.Drawing.Point(12, 111);
+            this.labelThreads.Name = "labelThreads";
+            this.labelThreads.Size = new System.Drawing.Size(49, 13);
+            this.labelThreads.TabIndex = 10;
+            this.labelThreads.Text = "Threads:";
+            // 
+            // numericUpDownThreads
+            // 
+            this.numericUpDownThreads.Location = new System.Drawing.Point(69, 111);
+            this.numericUpDownThreads.Margin = new System.Windows.Forms.Padding(0);
+            this.numericUpDownThreads.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownThreads.Name = "numericUpDownThreads";
+            this.numericUpDownThreads.Size = new System.Drawing.Size(169, 20);
+            this.numericUpDownThreads.TabIndex = 11;
+            this.numericUpDownThreads.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDownThreads.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // DBListConfig
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(284, 161);
+            this.ClientSize = new System.Drawing.Size(284, 193);
+            this.Controls.Add(this.numericUpDownThreads);
+            this.Controls.Add(this.labelThreads);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.textBoxPassword);
@@ -142,11 +175,12 @@
             this.Controls.Add(this.labelLogin);
             this.Controls.Add(this.labelDB);
             this.Controls.Add(this.labelServer);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "DBListConfig";
             this.ShowIcon = false;
             this.Text = "DB list config";
             this.Load += new System.EventHandler(this.DBListConfig_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreads)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -164,5 +198,7 @@
         private System.Windows.Forms.TextBox textBoxPassword;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Label labelThreads;
+        private System.Windows.Forms.NumericUpDown numericUpDownThreads;
     }
 }

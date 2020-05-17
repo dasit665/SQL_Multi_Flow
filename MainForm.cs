@@ -10,271 +10,119 @@ using System.Windows.Forms;
 
 using System.IO;
 using System.Configuration;
-using Microsoft.EntityFrameworkCore;
+
+using System.Data.SqlClient;
+using Microsoft.Data.SqlClient.Server;
 
 namespace SQL_Multi_Flow
 {
     public partial class MainForm : Form
     {
+        string connectionString = $@"Data Source={ConfigurationManager.AppSettings["server"]};Initial Catalog={ConfigurationManager.AppSettings["database"]};User ID ={ConfigurationManager.AppSettings["login"]};Password={ConfigurationManager.AppSettings["password"]}";
+
         public MainForm()
         {
             InitializeComponent();
         }
 
-        private async void MainForm_Load(object sender, EventArgs e)
+
+        #region Main Form Load
+        private void MainForm_Load(object sender, EventArgs e)
         {
+            string markers = "SELECT m.MarkerName FROM ServersAndMarkers.Markers m";
+            string scripts = "SELECT st.ScriptName FROM Scripts.ScriptsTable AS st";
 
-
-            await Task.Run(() =>
+            try
             {
-                using (RushDataBasesServersListContext DB = new RushDataBasesServersListContext())
+                using (SqlConnection SQLConnection = new SqlConnection(connectionString))
                 {
+                    SQLConnection.Open();
 
-                    DB.Database.OpenConnection();
-                    DB.Database.CloseConnection();
+                    List<string> scriptsList = new List<string>();
 
+                    var SQLCommand = new SqlCommand(scripts, SQLConnection);
+                    var reader = SQLCommand.ExecuteReader();
 
-                    if (DB.Database.CanConnect()==false)
+                    while (reader.Read())
                     {
-                        MessageBox.Show("Connection error");
-                        return;
+                        scriptsList.Add($"{reader.GetValue(0)}");
                     }
 
-                    this.comboBox1.Items.AddRange(new string[] { "Сценарий 1", "Сценарий 2", "Сценарий 3", "Сценарий 4" });
+
+                    this.checkedListBoxScripts.Items.AddRange(scriptsList.ToArray());
+                    if (checkedListBoxScripts.Items.Count > 0)
+                    {
+                        this.checkedListBoxScripts.SelectedIndex = 0;
+                    }
+                }
+
+                using (SqlConnection SQLConnection = new SqlConnection(connectionString))
+                {
+                    SQLConnection.Open();
+
+                    List<string> markersList = new List<string>();
+
+                    var SQLCommand = new SqlCommand(markers, SQLConnection);
+                    var reader = SQLCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        markersList.Add(reader.GetValue(0).ToString());
+                    }
+
+                    this.comboBox1.Items.AddRange(new string[] { "Сценарий 1", "Сценарий 2", "Сценарий 3", "Сценарий 4", "Сценарий 5" });
                     this.comboBox1.SelectedIndex = 0;
 
                     this.comboBox2.Items.Add("All");
+                    this.comboBox2.Items.AddRange(markersList.ToArray());
+
                     this.comboBox2.SelectedIndex = 0;
-
-
-                    this.comboBox2.Items.AddRange(DB.Markers.Select(s => s.MarkerName).ToArray());
                 }
-            });
-        }
 
-        private void ToolStripMenuItemOpenFolder_Click(object sender, EventArgs e)
-        {
-            this.folderBrowserDialogScripts.ShowDialog();
-
-            if (string.IsNullOrEmpty(this.folderBrowserDialogScripts.SelectedPath) == false)
+            }
+            catch (Exception Ex)
             {
-                var filesPaths = Infrastructure.StaticMethods.getFilesNames(this.folderBrowserDialogScripts.SelectedPath);
+                MessageBox.Show(Ex.Message);
+                new DBListConfig().Show();
+            }
 
-                foreach (var i in filesPaths)
+        }
+        #endregion Main Form Load
+
+
+        #region Servers
+
+
+        private void comboBox2_SelectedValueChanged(object sender, EventArgs e)
+        {
+            string SQLQuery = $@"SELECT sl.ServerDomainName + '/' + m.MarkerName FROM ServersAndMarkers.Relations r JOIN ServersAndMarkers.ServerList sl ON r.ServerListID = sl.ID JOIN ServersAndMarkers.Markers m ON r.MarkerID = m.ID";
+
+            try
+            {
+                using (SqlConnection SQLConnection = new SqlConnection(connectionString))
                 {
-                    if (this.checkedListBoxScripts.Items.Contains(i) == true)
+                    SQLConnection.Open();
+
+                    if (comboBox2.Text != "All")
                     {
-                        continue;
-                    }
-                    this.checkedListBoxScripts.Items.Add(i, true);
-                }
-
-                if (checkedListBoxScripts.Items.Count > 0)
-                {
-                    this.checkedListBoxScripts.SelectedItem = checkedListBoxScripts.Items[0];
-                }
-
-                checkBoxOrder.Checked = false;
-            }
-        }
-
-        private void buttonRemoveAll_Click(object sender, EventArgs e)
-        {
-            this.checkedListBoxScripts.Items.Clear();
-            checkBoxOrder.Checked = false;
-
-            this.richTextBox1.Text = "";
-            this.labelScriptName.Text = "Скрипт:";
-        }
-
-        private void buttonRemove_Click(object sender, EventArgs e)
-        {
-            if (checkedListBoxScripts.Items.Count > 1)
-            {
-                var itemToDelete = this.checkedListBoxScripts.SelectedItem;
-                if (checkedListBoxScripts.SelectedIndex == 0)
-                {
-                    this.checkedListBoxScripts.SelectedIndex = checkedListBoxScripts.SelectedIndex + 1;
-                }
-                else
-                {
-                    this.checkedListBoxScripts.SelectedIndex = checkedListBoxScripts.SelectedIndex - 1;
-                }
-                this.checkedListBoxScripts.Items.Remove(itemToDelete);
-            }
-            else
-            {
-                checkedListBoxScripts.Items.Clear();
-                this.richTextBox1.Text = "";
-                this.labelScriptName.Text = "Скрипт:";
-            }
-
-            checkBoxOrder.Checked = false;
-        }
-
-        private void buttonImport_Click(object sender, EventArgs e)
-        {
-            this.openFileDialogSQL.FileName = "";
-            this.openFileDialogSQL.ShowDialog();
-            if (string.IsNullOrEmpty(this.openFileDialogSQL.FileName) == false)
-            {
-                if (this.checkedListBoxScripts.Items.Contains(openFileDialogSQL.FileName) == false)
-                {
-                    this.checkedListBoxScripts.Items.Add(openFileDialogSQL.FileName, true);
-                }
-
-                checkBoxOrder.Checked = false;
-            }
-        }
-
-        private void buttonUp_Click(object sender, EventArgs e)
-        {
-            if (this.checkedListBoxScripts.SelectedIndex > 0 && this.checkedListBoxScripts.SelectedIndex != -1)
-            {
-                checkedListBoxScripts.SelectedValueChanged -= checkedListBoxScripts_SelectedValueChanged;
-
-                string temp = "";
-                int selected = this.checkedListBoxScripts.SelectedIndex;
-
-                var dataPrev = checkedListBoxScripts.Items[selected - 1].ToString();
-
-                temp = dataPrev;
-
-                checkedListBoxScripts.Items[selected - 1] = checkedListBoxScripts.Items[selected];
-                checkedListBoxScripts.Items[selected] = temp;
-
-                checkedListBoxScripts.SelectedItem = checkedListBoxScripts.Items[selected - 1];
-
-                checkBoxOrder.Checked = false;
-
-                checkedListBoxScripts.SelectedValueChanged += checkedListBoxScripts_SelectedValueChanged;
-            }
-        }
-
-        private void buttonDown_Click(object sender, EventArgs e)
-        {
-            if (this.checkedListBoxScripts.SelectedIndex < this.checkedListBoxScripts.Items.Count - 1 && this.checkedListBoxScripts.SelectedIndex != -1)
-            {
-                checkedListBoxScripts.SelectedValueChanged -= checkedListBoxScripts_SelectedValueChanged;
-
-                string temp = "";
-                int selected = this.checkedListBoxScripts.SelectedIndex;
-
-                var dataNext = checkedListBoxScripts.Items[selected + 1].ToString();
-
-                temp = dataNext;
-
-                checkedListBoxScripts.Items[selected + 1] = checkedListBoxScripts.Items[selected];
-                checkedListBoxScripts.Items[selected] = temp;
-
-                checkedListBoxScripts.SelectedItem = checkedListBoxScripts.Items[selected + 1];
-
-                checkBoxOrder.Checked = false;
-
-                checkedListBoxScripts.SelectedValueChanged += checkedListBoxScripts_SelectedValueChanged;
-            }
-        }
-
-        private void checkBoxOrder_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBoxOrder.CheckState.ToString() == "Checked")
-            {
-
-                List<string> elements = new List<string>();
-                foreach (var i in checkedListBoxScripts.Items)
-                {
-                    elements.Add(i.ToString());
-                }
-
-                elements = elements.OrderBy(o => o).ToList();
-
-                checkedListBoxScripts.Items.Clear();
-
-                foreach (var i in elements)
-                {
-                    checkedListBoxScripts.Items.Add(i.ToString(), true);
-                }
-
-            }
-        }
-
-
-        private void checkedListBoxScripts_SelectedValueChanged(object sender, EventArgs e)
-        {
-
-            var fileContent = File.ReadAllText(this.checkedListBoxScripts.SelectedItem.ToString(), Encoding.UTF8);
-
-            this.richTextBox1.Text = fileContent;
-
-            labelScriptName.Text = $"Скрипт: {checkedListBoxScripts.SelectedItem.ToString()}";
-        }
-
-        private void buttonNew_Click(object sender, EventArgs e)
-        {
-            saveFileDialogSQL.ShowDialog();
-
-            if (string.IsNullOrEmpty(saveFileDialogSQL.FileName) == false)
-            {
-                if (File.Exists(saveFileDialogSQL.FileName) == true)
-                {
-                    File.Delete(saveFileDialogSQL.FileName);
-                }
-
-                File.Create(saveFileDialogSQL.FileName).Close();
-
-                this.checkedListBoxScripts.Items.Add(saveFileDialogSQL.FileName, CheckState.Checked);
-                this.checkedListBoxScripts.SelectedItem = saveFileDialogSQL.FileName;
-
-            }
-
-        }
-
-
-        private void buttonSaveScript_Click(object sender, EventArgs e)
-        {
-
-            if (this.checkedListBoxScripts.Items.Count > 0)
-            {
-                File.WriteAllText(this.checkedListBoxScripts.SelectedItem.ToString(),
-                    this.richTextBox1.Text, Encoding.UTF8);
-            }
-
-        }
-
-        private async void comboBox2_SelectedValueChanged(object sender, EventArgs e)
-        {
-            await Task.Run(() =>
-            {
-                this.checkBoxDataBases.Checked = false;
-                this.checkedListBoxDB.Items.Clear();
-                using (RushDataBasesServersListContext DB = new RushDataBasesServersListContext())
-                {
-                    if (DB.Database.CanConnect() == false)
-                    {
-                        return;
+                        SQLQuery += $" WHERE m.MarkerName = '{comboBox2.Text}'";
                     }
 
-                    if (comboBox2.SelectedItem.ToString() == "All")
-                    {
-                        this.checkedListBoxDB.Items.AddRange(
-                            DB.ServerList.Select(s => s.ServerDomainName + "/" + s.DataBaseName).ToArray());
-                    }
-                    else
-                    {
-                        var data = (from relations in DB.Relations
-                                    where relations.MarkerId == DB.Markers.Where(w => w.MarkerName == comboBox2.SelectedItem.ToString()).FirstOrDefault().Id
-                                    join serverList in DB.ServerList
-                                    on relations.ServerListId equals serverList.Id
-                                    select new
-                                    {
-                                        serverName = serverList.ServerDomainName,
-                                        DBName = serverList.DataBaseName
-                                    }).Select(s => s.serverName + "/" + s.DBName).ToArray();
+                    var SQLCommand = new SqlCommand(SQLQuery, SQLConnection);
+                    var reader = SQLCommand.ExecuteReader();
 
-                        this.checkedListBoxDB.Items.AddRange(data);
+                    checkedListBoxDB.Items.Clear();
+
+                    while (reader.Read())
+                    {
+                        checkedListBoxDB.Items.Add(reader.GetValue(0));
                     }
                 }
-            });
+            }
+            catch (SqlException EX)
+            {
+                MessageBox.Show(EX.ToString());
+            }
         }
 
         private void buttonConfiguration_Click(object sender, EventArgs e)
@@ -306,6 +154,219 @@ namespace SQL_Multi_Flow
                 foreach (var i in temp)
                 {
                     checkedListBoxDB.Items.Add(i.ToString(), false);
+                }
+            }
+        }
+        #endregion Servers
+
+
+        private void checkBoxOrder_CheckedChanged(object sender, EventArgs e)
+        {
+            List<string> dataToSort = new List<string>();
+
+            foreach (var i in checkedListBoxScripts.Items)
+            {
+                dataToSort.Add(i.ToString());
+            }
+
+            checkedListBoxScripts.Items.Clear();
+
+            dataToSort.Sort();
+            checkedListBoxScripts.Items.AddRange(dataToSort.ToArray());
+
+            if (checkedListBoxScripts.Items.Count > 0)
+            {
+                checkedListBoxScripts.SelectedIndex = 0;
+            }
+
+            List<string> Vals = new List<string>();
+
+            foreach (var i in checkedListBoxScripts.Items)
+            {
+                Vals.Add(i.ToString());
+            }
+
+            checkedListBoxScripts.Items.Clear();
+
+            foreach (var i in Vals)
+            {
+                checkedListBoxScripts.Items.Add(i.ToString(), checkBoxOrder.Checked);
+            }
+        }
+
+        private void ToolStripMenuItemImportToDB_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialogScripts.ShowDialog();
+
+            if (string.IsNullOrEmpty(folderBrowserDialogScripts.SelectedPath) == false)
+            {
+                var filesInDirectory = Directory.GetFiles(folderBrowserDialogScripts.SelectedPath, "*.sql");
+                string fileName = "", fileContent = "";
+
+                using (SqlConnection SQLConnection = new SqlConnection(connectionString))
+                {
+                    SQLConnection.Open();
+
+                    var command = new SqlCommand("", SQLConnection);
+
+                    command.CommandText = "Scripts.AddScript";
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    foreach (var i in filesInDirectory)
+                    {
+
+                        fileName = i.Split('\\').Last();
+                        fileContent = File.ReadAllText(i, Encoding.ASCII);
+
+                        command.Parameters.AddWithValue("@ScriptName", fileName);
+                        command.Parameters.AddWithValue("@ScriptContent", fileContent);
+
+                        command.ExecuteNonQuery();
+
+                        command.Parameters.Clear();
+
+                    }
+
+                    checkedListBoxScripts.Items.Clear();
+
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "SELECT st.ScriptName FROM Scripts.ScriptsTable st";
+
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        checkedListBoxScripts.Items.Add(reader.GetValue(0));
+                    }
+
+                    if (checkedListBoxScripts.Items.Count > 0)
+                    {
+                        checkedListBoxScripts.SelectedIndex = 0;
+                    }
+                }
+            }
+        }
+
+        private void buttonRemoveAll_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "Scripts.TruncateTables";
+
+                command.ExecuteNonQuery();
+
+                checkedListBoxScripts.Items.Clear();
+            }
+
+            richTextBox1.Text = "";
+        }
+
+        private void buttonRemove_Click(object sender, EventArgs e)
+        {
+
+            richTextBox1.Text = "";
+
+            if (checkedListBoxScripts.Items.Count > 0)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    SqlCommand command = new SqlCommand($"DELETE Scripts.ScriptsTable WHERE ScriptName = '{checkedListBoxScripts.SelectedItem.ToString()}'", connection);
+
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = "SELECT st.ScriptName FROM Scripts.ScriptsTable st";
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    checkedListBoxScripts.Items.Clear();
+
+                    while (reader.Read())
+                    {
+                        checkedListBoxScripts.Items.Add(reader.GetValue(0));
+                    }
+
+                    if (checkedListBoxScripts.Items.Count > 0)
+                    {
+                        checkedListBoxScripts.SelectedIndex = 0;
+                    }
+                }
+            }
+        }
+
+        private void buttonUp_Click(object sender, EventArgs e)
+        {
+            if (checkedListBoxScripts.SelectedIndex > 0)
+            {
+                int selectedIndex = checkedListBoxScripts.SelectedIndex;
+
+                bool prevCheked = checkedListBoxScripts.GetItemChecked(selectedIndex - 1);
+                bool selectedChecked = checkedListBoxScripts.GetItemChecked(selectedIndex);
+
+                string prevValue = checkedListBoxScripts.Items[checkedListBoxScripts.SelectedIndex - 1].ToString();
+                string temp = checkedListBoxScripts.SelectedItem.ToString();
+
+                checkedListBoxScripts.Items[selectedIndex] = prevValue;
+                checkedListBoxScripts.SetItemChecked(selectedIndex, prevCheked);
+
+                checkedListBoxScripts.Items[selectedIndex - 1] = temp;
+                checkedListBoxScripts.SetItemChecked(selectedIndex - 1, selectedChecked);
+
+                checkedListBoxScripts.SetSelected(selectedIndex - 1, true);
+            }
+        }
+
+        private void buttonDown_Click(object sender, EventArgs e)
+        {
+            if (checkedListBoxScripts.SelectedIndex < checkedListBoxScripts.Items.Count - 1)
+            {
+                int selectedIndex = checkedListBoxScripts.SelectedIndex;
+
+                bool nextCheked = checkedListBoxScripts.GetItemChecked(selectedIndex + 1);
+                bool selectedChecked = checkedListBoxScripts.GetItemChecked(selectedIndex);
+
+                string nextValue = checkedListBoxScripts.Items[checkedListBoxScripts.SelectedIndex + 1].ToString();
+                string temp = checkedListBoxScripts.SelectedItem.ToString();
+
+                checkedListBoxScripts.Items[selectedIndex] = nextValue;
+                checkedListBoxScripts.SetItemChecked(selectedIndex, nextCheked);
+
+                checkedListBoxScripts.Items[selectedIndex + 1] = temp;
+                checkedListBoxScripts.SetItemChecked(selectedIndex + 1, selectedChecked);
+
+                checkedListBoxScripts.SetSelected(selectedIndex + 1, true);
+            }
+        }
+
+        private void buttonNew_Click(object sender, EventArgs e)
+        {
+            NewScriptName newScript = new NewScriptName(checkedListBoxScripts, connectionString);
+            newScript.Show(this);
+        }
+
+        private void checkedListBoxScripts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if ((checkedListBoxScripts.SelectedItem is null) == false)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    SqlCommand command = new SqlCommand($"SELECT st.ScriptContent FROM Scripts.ScriptsTable st WHERE st.ScriptName = '{checkedListBoxScripts.SelectedItem.ToString()}'", connection);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        richTextBox1.Text = reader.GetValue(0).ToString();
+                    }
                 }
             }
         }

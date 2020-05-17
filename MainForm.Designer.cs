@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.ToolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItemOpenFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItemImportToDB = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemTools = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,8 +48,6 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonUp = new System.Windows.Forms.Button();
             this.buttonDown = new System.Windows.Forms.Button();
-            this.buttonNew = new System.Windows.Forms.Button();
-            this.buttonImport = new System.Windows.Forms.Button();
             this.checkBoxOrder = new System.Windows.Forms.CheckBox();
             this.checkedListBoxScripts = new System.Windows.Forms.CheckedListBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -83,9 +81,8 @@
             this.treeViewExecutedScripts = new System.Windows.Forms.TreeView();
             this.labelExecutedScripts = new System.Windows.Forms.Label();
             this.folderBrowserDialogScripts = new System.Windows.Forms.FolderBrowserDialog();
-            this.openFileDialogSQL = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialogSQL = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.buttonNew = new System.Windows.Forms.Button();
             this.MainMenu.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -108,23 +105,23 @@
             // ToolStripMenuItemFile
             // 
             this.ToolStripMenuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripMenuItemOpenFolder,
+            this.ToolStripMenuItemImportToDB,
             this.ToolStripMenuItemClose});
             this.ToolStripMenuItemFile.Name = "ToolStripMenuItemFile";
             this.ToolStripMenuItemFile.Size = new System.Drawing.Size(48, 20);
             this.ToolStripMenuItemFile.Text = "Фаил";
             // 
-            // ToolStripMenuItemOpenFolder
+            // ToolStripMenuItemImportToDB
             // 
-            this.ToolStripMenuItemOpenFolder.Name = "ToolStripMenuItemOpenFolder";
-            this.ToolStripMenuItemOpenFolder.Size = new System.Drawing.Size(176, 22);
-            this.ToolStripMenuItemOpenFolder.Text = "Добавить скрипты";
-            this.ToolStripMenuItemOpenFolder.Click += new System.EventHandler(this.ToolStripMenuItemOpenFolder_Click);
+            this.ToolStripMenuItemImportToDB.Name = "ToolStripMenuItemImportToDB";
+            this.ToolStripMenuItemImportToDB.Size = new System.Drawing.Size(239, 22);
+            this.ToolStripMenuItemImportToDB.Text = "Импортировать скрипты в БД";
+            this.ToolStripMenuItemImportToDB.Click += new System.EventHandler(this.ToolStripMenuItemImportToDB_Click);
             // 
             // ToolStripMenuItemClose
             // 
             this.ToolStripMenuItemClose.Name = "ToolStripMenuItemClose";
-            this.ToolStripMenuItemClose.Size = new System.Drawing.Size(176, 22);
+            this.ToolStripMenuItemClose.Size = new System.Drawing.Size(239, 22);
             this.ToolStripMenuItemClose.Text = "Закрыть";
             // 
             // ToolStripMenuItemTools
@@ -301,7 +298,6 @@
             this.flowLayoutPanel2.Controls.Add(this.buttonUp);
             this.flowLayoutPanel2.Controls.Add(this.buttonDown);
             this.flowLayoutPanel2.Controls.Add(this.buttonNew);
-            this.flowLayoutPanel2.Controls.Add(this.buttonImport);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 25);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
@@ -333,30 +329,6 @@
             this.buttonDown.UseVisualStyleBackColor = true;
             this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
             // 
-            // buttonNew
-            // 
-            this.buttonNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonNew.Location = new System.Drawing.Point(65, 0);
-            this.buttonNew.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.buttonNew.Name = "buttonNew";
-            this.buttonNew.Size = new System.Drawing.Size(60, 25);
-            this.buttonNew.TabIndex = 2;
-            this.buttonNew.Text = "Новый";
-            this.buttonNew.UseVisualStyleBackColor = true;
-            this.buttonNew.Click += new System.EventHandler(this.buttonNew_Click);
-            // 
-            // buttonImport
-            // 
-            this.buttonImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonImport.Location = new System.Drawing.Point(125, 0);
-            this.buttonImport.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(60, 25);
-            this.buttonImport.TabIndex = 3;
-            this.buttonImport.Text = "Импорт";
-            this.buttonImport.UseVisualStyleBackColor = true;
-            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
-            // 
             // checkBoxOrder
             // 
             this.checkBoxOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -379,7 +351,7 @@
             this.checkedListBoxScripts.Name = "checkedListBoxScripts";
             this.checkedListBoxScripts.Size = new System.Drawing.Size(332, 244);
             this.checkedListBoxScripts.TabIndex = 5;
-            this.checkedListBoxScripts.SelectedValueChanged += new System.EventHandler(this.checkedListBoxScripts_SelectedValueChanged);
+            this.checkedListBoxScripts.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxScripts_SelectedIndexChanged);
             // 
             // tableLayoutPanel6
             // 
@@ -454,7 +426,6 @@
             this.buttonSaveScript.TabIndex = 0;
             this.buttonSaveScript.Text = "Сохранить скрипт(Ctr+S)";
             this.buttonSaveScript.UseVisualStyleBackColor = true;
-            this.buttonSaveScript.Click += new System.EventHandler(this.buttonSaveScript_Click);
             // 
             // labelScriptName
             // 
@@ -761,22 +732,24 @@
             this.labelExecutedScripts.Name = "labelExecutedScripts";
             this.labelExecutedScripts.Size = new System.Drawing.Size(127, 13);
             this.labelExecutedScripts.TabIndex = 1;
-            this.labelExecutedScripts.Text = "Выподненные скрипты:";
-            // 
-            // openFileDialogSQL
-            // 
-            this.openFileDialogSQL.FileName = "openFileDialogSQL";
-            this.openFileDialogSQL.Filter = "T-SQL files|*.sql";
-            // 
-            // saveFileDialogSQL
-            // 
-            this.saveFileDialogSQL.DefaultExt = "sql";
-            this.saveFileDialogSQL.Filter = "T-SQL|*.sql";
+            this.labelExecutedScripts.Text = "Выполненные скрипты:";
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // buttonNew
+            // 
+            this.buttonNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonNew.Location = new System.Drawing.Point(65, 0);
+            this.buttonNew.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.buttonNew.Name = "buttonNew";
+            this.buttonNew.Size = new System.Drawing.Size(60, 25);
+            this.buttonNew.TabIndex = 2;
+            this.buttonNew.Text = "Новый";
+            this.buttonNew.UseVisualStyleBackColor = true;
+            this.buttonNew.Click += new System.EventHandler(this.buttonNew_Click);
             // 
             // MainForm
             // 
@@ -825,7 +798,6 @@
         #endregion
 
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemFile;
-        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemOpenFolder;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemClose;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemTools;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemHelp;
@@ -841,8 +813,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button buttonImport;
-        private System.Windows.Forms.Button buttonNew;
         private System.Windows.Forms.Button buttonDown;
         private System.Windows.Forms.Button buttonUp;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
@@ -877,10 +847,10 @@
         private System.Windows.Forms.TreeView treeViewExecutedScripts;
         private System.Windows.Forms.Label labelExecutedScripts;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogScripts;
-        private System.Windows.Forms.OpenFileDialog openFileDialogSQL;
         private System.Windows.Forms.CheckBox checkBoxOrder;
-        private System.Windows.Forms.SaveFileDialog saveFileDialogSQL;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemImportToDB;
+        private System.Windows.Forms.Button buttonNew;
     }
 }
 
