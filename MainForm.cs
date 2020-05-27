@@ -13,12 +13,17 @@ using System.Configuration;
 
 using System.Data.SqlClient;
 using Microsoft.Data.SqlClient.Server;
+using System.Data.Linq;
+
+using static SQL_Multi_Flow.Infrastructure.StaticMethods;
+using System.Threading;
+using System.Timers;
 
 namespace SQL_Multi_Flow
 {
     public partial class MainForm : Form
     {
-        string connectionString = $@"Data Source={ConfigurationManager.AppSettings["server"]};Initial Catalog={ConfigurationManager.AppSettings["database"]};User ID ={ConfigurationManager.AppSettings["login"]};Password={ConfigurationManager.AppSettings["password"]}";
+        string connectionString = $@"Server={ConfigurationManager.AppSettings["server"]};Database={ConfigurationManager.AppSettings["database"]};User={ConfigurationManager.AppSettings["login"]};Password={ConfigurationManager.AppSettings["password"]}";
 
         public MainForm()
         {
@@ -89,76 +94,7 @@ namespace SQL_Multi_Flow
         }
         #endregion Main Form Load
 
-
-        #region Servers
-
-
-        private void comboBox2_SelectedValueChanged(object sender, EventArgs e)
-        {
-            string SQLQuery = $@"SELECT sl.ServerDomainName + '/' + m.MarkerName FROM ServersAndMarkers.Relations r JOIN ServersAndMarkers.ServerList sl ON r.ServerListID = sl.ID JOIN ServersAndMarkers.Markers m ON r.MarkerID = m.ID";
-
-            try
-            {
-                using (SqlConnection SQLConnection = new SqlConnection(connectionString))
-                {
-                    SQLConnection.Open();
-
-                    if (comboBox2.Text != "All")
-                    {
-                        SQLQuery += $" WHERE m.MarkerName = '{comboBox2.Text}'";
-                    }
-
-                    var SQLCommand = new SqlCommand(SQLQuery, SQLConnection);
-                    var reader = SQLCommand.ExecuteReader();
-
-                    checkedListBoxDB.Items.Clear();
-
-                    while (reader.Read())
-                    {
-                        checkedListBoxDB.Items.Add(reader.GetValue(0));
-                    }
-                }
-            }
-            catch (SqlException EX)
-            {
-                MessageBox.Show(EX.ToString());
-            }
-        }
-
-        private void buttonConfiguration_Click(object sender, EventArgs e)
-        {
-            var DBListConfig = new DBListConfig();
-            DBListConfig.Show(this);
-        }
-
-        private void checkBoxDataBases_CheckedChanged(object sender, EventArgs e)
-        {
-            var temp = new List<string>();
-
-            foreach (var i in checkedListBoxDB.Items)
-            {
-                temp.Add(i.ToString());
-            }
-
-            checkedListBoxDB.Items.Clear();
-
-            if (checkBoxDataBases.Checked == true)
-            {
-                foreach (var i in temp)
-                {
-                    checkedListBoxDB.Items.Add(i.ToString(), true);
-                }
-            }
-            else
-            {
-                foreach (var i in temp)
-                {
-                    checkedListBoxDB.Items.Add(i.ToString(), false);
-                }
-            }
-        }
-        #endregion Servers
-
+        #region Scripts
 
         private void checkBoxOrder_CheckedChanged(object sender, EventArgs e)
         {
@@ -370,5 +306,146 @@ namespace SQL_Multi_Flow
                 }
             }
         }
+
+        #endregion Scripts
+
+        #region richTextBox
+        private void buttonSaveScript_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(richTextBox1.Text) == false)
+            {
+                string scriptName = checkedListBoxScripts.SelectedItem.ToString();
+
+                DataContext dataContext = new DataContext(connectionString);
+
+                dataContext.ExecuteCommand("UPDATE Scripts.ScriptsTable SET ScriptContent = {0} WHERE ScriptName = {1}", richTextBox1.Text.ToString(), checkedListBoxScripts.SelectedItem.ToString());
+            }
+        }
+        #endregion richTextBox
+
+        #region Servers
+
+
+        private void comboBox2_SelectedValueChanged(object sender, EventArgs e)
+        {
+            string SQLQuery = $@"SELECT sl.ServerDomainName + '#' + sl.DataBaseName FROM ServersAndMarkers.Relations r JOIN ServersAndMarkers.ServerList sl ON r.ServerListID = sl.ID JOIN ServersAndMarkers.Markers m ON r.MarkerID = m.ID";
+
+            try
+            {
+                using (SqlConnection SQLConnection = new SqlConnection(connectionString))
+                {
+                    SQLConnection.Open();
+
+                    if (comboBox2.Text != "All")
+                    {
+                        SQLQuery += $" WHERE m.MarkerName = '{comboBox2.Text}'";
+                    }
+
+                    var SQLCommand = new SqlCommand(SQLQuery, SQLConnection);
+                    var reader = SQLCommand.ExecuteReader();
+
+                    checkedListBoxDB.Items.Clear();
+
+                    while (reader.Read())
+                    {
+                        checkedListBoxDB.Items.Add(reader.GetValue(0));
+                    }
+                }
+            }
+            catch (SqlException EX)
+            {
+                MessageBox.Show(EX.ToString());
+            }
+        }
+
+        private void buttonConfiguration_Click(object sender, EventArgs e)
+        {
+            var DBListConfig = new DBListConfig();
+            DBListConfig.Show(this);
+        }
+
+        private void checkBoxDataBases_CheckedChanged(object sender, EventArgs e)
+        {
+            var temp = new List<string>();
+
+            foreach (var i in checkedListBoxDB.Items)
+            {
+                temp.Add(i.ToString());
+            }
+
+            checkedListBoxDB.Items.Clear();
+
+            if (checkBoxDataBases.Checked == true)
+            {
+                foreach (var i in temp)
+                {
+                    checkedListBoxDB.Items.Add(i.ToString(), true);
+                }
+            }
+            else
+            {
+                foreach (var i in temp)
+                {
+                    checkedListBoxDB.Items.Add(i.ToString(), false);
+                }
+            }
+        }
+        #endregion Servers
+
+        #region Parse
+        private async void buttonParseScript_Click(object sender, EventArgs e)
+        {
+            List<string> scriptsList = new List<string>();
+            List<string> serversList = new List<string>();
+            int Threads = int.Parse(ConfigurationSettings.AppSettings["threads"]);
+
+            foreach (var i in checkedListBoxScripts.CheckedItems)
+            {
+                scriptsList.Add(i.ToString());
+            }
+
+            foreach (var i in checkedListBoxDB.CheckedItems)
+            {
+                serversList.Add(i.ToString());
+            }
+
+            //using (var timer = new System.Windows.Forms.Timer())
+            //{
+            //    timer.Tick += Timer_Tick;
+            //    timer.Interval = 250;
+            //    timer.Start();
+
+
+            //    timer.Stop();
+            //}
+
+            await Dispatcher(connectionString, serversList, scriptsList, Threads);
+
+
+
+            await Task.Run(() =>
+            {
+                MessageBox.Show("Завершено");
+            });
+
+            await Task.Run(async () =>
+            {
+                await ShowResults(connectionString, dataGridViewSuccess, dataGridViewInfo, dataGridViewErrors);
+            });
+
+
+
+        }
+
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            await Task.Run(async () =>
+            {
+                await ShowResults(connectionString, dataGridViewSuccess, dataGridViewInfo, dataGridViewErrors);
+            });
+
+        }
+
+        #endregion Parse
     }
 }

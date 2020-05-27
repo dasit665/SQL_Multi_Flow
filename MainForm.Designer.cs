@@ -48,6 +48,7 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonUp = new System.Windows.Forms.Button();
             this.buttonDown = new System.Windows.Forms.Button();
+            this.buttonNew = new System.Windows.Forms.Button();
             this.checkBoxOrder = new System.Windows.Forms.CheckBox();
             this.checkedListBoxScripts = new System.Windows.Forms.CheckedListBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -68,21 +69,33 @@
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.tabControlResults = new System.Windows.Forms.TabControl();
             this.tabPageMessages = new System.Windows.Forms.TabPage();
-            this.tabPageResults = new System.Windows.Forms.TabPage();
+            this.tabPageSuccess = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelDisplay = new System.Windows.Forms.Label();
-            this.comboBoxDisplay = new System.Windows.Forms.ComboBox();
-            this.checkBoxDataBaseNameDispaly = new System.Windows.Forms.CheckBox();
-            this.buttonResDisSave = new System.Windows.Forms.Button();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
-            this.checkBoxExecuteAgainst = new System.Windows.Forms.CheckBox();
-            this.checkedListBoxExecuteAgainstServers = new System.Windows.Forms.CheckedListBox();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.treeViewExecutedScripts = new System.Windows.Forms.TreeView();
             this.labelExecutedScripts = new System.Windows.Forms.Label();
             this.folderBrowserDialogScripts = new System.Windows.Forms.FolderBrowserDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.buttonNew = new System.Windows.Forms.Button();
+            this.tabPageErrors = new System.Windows.Forms.TabPage();
+            this.dataGridViewSuccess = new System.Windows.Forms.DataGridView();
+            this.dataGridViewInfo = new System.Windows.Forms.DataGridView();
+            this.ID_Success = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DataTime_Success = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServerDBUserPasswd_Success = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ScriptName_Success = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ID_Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Data_Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServerDB_Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Script_Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MessageInfo_Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewErrors = new System.Windows.Forms.DataGridView();
+            this.ID_Errors = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DataTime_Errors = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServerDBUserPasswd_Errors = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ScriptName_Errors = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ErrorCode_Errors = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ErrorMessage_Errors = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MainMenu.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -97,9 +110,13 @@
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
             this.tabControlResults.SuspendLayout();
-            this.flowLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel10.SuspendLayout();
+            this.tabPageMessages.SuspendLayout();
+            this.tabPageSuccess.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
+            this.tabPageErrors.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSuccess)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewErrors)).BeginInit();
             this.SuspendLayout();
             // 
             // ToolStripMenuItemFile
@@ -207,6 +224,7 @@
             this.buttonParseScript.TabIndex = 0;
             this.buttonParseScript.Text = "Парсть скрипты(Ctr+F5)";
             this.buttonParseScript.UseVisualStyleBackColor = true;
+            this.buttonParseScript.Click += new System.EventHandler(this.buttonParseScript_Click);
             // 
             // buttonExecute
             // 
@@ -329,6 +347,18 @@
             this.buttonDown.UseVisualStyleBackColor = true;
             this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
             // 
+            // buttonNew
+            // 
+            this.buttonNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonNew.Location = new System.Drawing.Point(65, 0);
+            this.buttonNew.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.buttonNew.Name = "buttonNew";
+            this.buttonNew.Size = new System.Drawing.Size(60, 25);
+            this.buttonNew.TabIndex = 2;
+            this.buttonNew.Text = "Новый";
+            this.buttonNew.UseVisualStyleBackColor = true;
+            this.buttonNew.Click += new System.EventHandler(this.buttonNew_Click);
+            // 
             // checkBoxOrder
             // 
             this.checkBoxOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -426,6 +456,7 @@
             this.buttonSaveScript.TabIndex = 0;
             this.buttonSaveScript.Text = "Сохранить скрипт(Ctr+S)";
             this.buttonSaveScript.UseVisualStyleBackColor = true;
+            this.buttonSaveScript.Click += new System.EventHandler(this.buttonSaveScript_Click);
             // 
             // labelScriptName
             // 
@@ -573,8 +604,9 @@
             // 
             // tabControlResults
             // 
+            this.tabControlResults.Controls.Add(this.tabPageSuccess);
             this.tabControlResults.Controls.Add(this.tabPageMessages);
-            this.tabControlResults.Controls.Add(this.tabPageResults);
+            this.tabControlResults.Controls.Add(this.tabPageErrors);
             this.tabControlResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlResults.Location = new System.Drawing.Point(0, 25);
             this.tabControlResults.Margin = new System.Windows.Forms.Padding(0);
@@ -585,7 +617,7 @@
             // 
             // tabPageMessages
             // 
-            this.tabPageMessages.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPageMessages.Controls.Add(this.dataGridViewInfo);
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageMessages.Name = "tabPageMessages";
@@ -594,23 +626,19 @@
             this.tabPageMessages.Text = "Cообщения";
             this.tabPageMessages.UseVisualStyleBackColor = true;
             // 
-            // tabPageResults
+            // tabPageSuccess
             // 
-            this.tabPageResults.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabPageResults.Location = new System.Drawing.Point(4, 22);
-            this.tabPageResults.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPageResults.Name = "tabPageResults";
-            this.tabPageResults.Size = new System.Drawing.Size(796, 295);
-            this.tabPageResults.TabIndex = 1;
-            this.tabPageResults.Text = "Результаты";
-            this.tabPageResults.UseVisualStyleBackColor = true;
+            this.tabPageSuccess.Controls.Add(this.dataGridViewSuccess);
+            this.tabPageSuccess.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSuccess.Margin = new System.Windows.Forms.Padding(0);
+            this.tabPageSuccess.Name = "tabPageSuccess";
+            this.tabPageSuccess.Size = new System.Drawing.Size(796, 295);
+            this.tabPageSuccess.TabIndex = 1;
+            this.tabPageSuccess.Text = "Успешные";
+            this.tabPageSuccess.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel4
             // 
-            this.flowLayoutPanel4.Controls.Add(this.labelDisplay);
-            this.flowLayoutPanel4.Controls.Add(this.comboBoxDisplay);
-            this.flowLayoutPanel4.Controls.Add(this.checkBoxDataBaseNameDispaly);
-            this.flowLayoutPanel4.Controls.Add(this.buttonResDisSave);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
@@ -618,52 +646,10 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(804, 25);
             this.flowLayoutPanel4.TabIndex = 1;
             // 
-            // labelDisplay
-            // 
-            this.labelDisplay.AutoSize = true;
-            this.labelDisplay.Location = new System.Drawing.Point(3, 5);
-            this.labelDisplay.Margin = new System.Windows.Forms.Padding(3, 5, 0, 0);
-            this.labelDisplay.Name = "labelDisplay";
-            this.labelDisplay.Size = new System.Drawing.Size(72, 13);
-            this.labelDisplay.TabIndex = 0;
-            this.labelDisplay.Text = "Отображать:";
-            // 
-            // comboBoxDisplay
-            // 
-            this.comboBoxDisplay.FormattingEnabled = true;
-            this.comboBoxDisplay.Location = new System.Drawing.Point(78, 0);
-            this.comboBoxDisplay.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.comboBoxDisplay.Name = "comboBoxDisplay";
-            this.comboBoxDisplay.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxDisplay.TabIndex = 1;
-            // 
-            // checkBoxDataBaseNameDispaly
-            // 
-            this.checkBoxDataBaseNameDispaly.AutoSize = true;
-            this.checkBoxDataBaseNameDispaly.Location = new System.Drawing.Point(205, 4);
-            this.checkBoxDataBaseNameDispaly.Margin = new System.Windows.Forms.Padding(6, 4, 0, 0);
-            this.checkBoxDataBaseNameDispaly.Name = "checkBoxDataBaseNameDispaly";
-            this.checkBoxDataBaseNameDispaly.Size = new System.Drawing.Size(180, 17);
-            this.checkBoxDataBaseNameDispaly.TabIndex = 2;
-            this.checkBoxDataBaseNameDispaly.Text = "Включить имя БД в результат";
-            this.checkBoxDataBaseNameDispaly.UseVisualStyleBackColor = true;
-            // 
-            // buttonResDisSave
-            // 
-            this.buttonResDisSave.Location = new System.Drawing.Point(388, 0);
-            this.buttonResDisSave.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.buttonResDisSave.Name = "buttonResDisSave";
-            this.buttonResDisSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonResDisSave.TabIndex = 3;
-            this.buttonResDisSave.Text = "Сохранить";
-            this.buttonResDisSave.UseVisualStyleBackColor = true;
-            // 
             // tableLayoutPanel10
             // 
             this.tableLayoutPanel10.ColumnCount = 1;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.Controls.Add(this.checkBoxExecuteAgainst, 0, 1);
-            this.tableLayoutPanel10.Controls.Add(this.checkedListBoxExecuteAgainstServers, 0, 2);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel10.Location = new System.Drawing.Point(268, 0);
             this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
@@ -674,28 +660,6 @@
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.Size = new System.Drawing.Size(268, 346);
             this.tableLayoutPanel10.TabIndex = 1;
-            // 
-            // checkBoxExecuteAgainst
-            // 
-            this.checkBoxExecuteAgainst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxExecuteAgainst.AutoSize = true;
-            this.checkBoxExecuteAgainst.Location = new System.Drawing.Point(6, 56);
-            this.checkBoxExecuteAgainst.Margin = new System.Windows.Forms.Padding(6, 0, 0, 2);
-            this.checkBoxExecuteAgainst.Name = "checkBoxExecuteAgainst";
-            this.checkBoxExecuteAgainst.Size = new System.Drawing.Size(100, 17);
-            this.checkBoxExecuteAgainst.TabIndex = 0;
-            this.checkBoxExecuteAgainst.Text = "Выполнить на:";
-            this.checkBoxExecuteAgainst.UseVisualStyleBackColor = true;
-            // 
-            // checkedListBoxExecuteAgainstServers
-            // 
-            this.checkedListBoxExecuteAgainstServers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkedListBoxExecuteAgainstServers.FormattingEnabled = true;
-            this.checkedListBoxExecuteAgainstServers.Location = new System.Drawing.Point(3, 75);
-            this.checkedListBoxExecuteAgainstServers.Margin = new System.Windows.Forms.Padding(3, 0, 0, 3);
-            this.checkedListBoxExecuteAgainstServers.Name = "checkedListBoxExecuteAgainstServers";
-            this.checkedListBoxExecuteAgainstServers.Size = new System.Drawing.Size(265, 268);
-            this.checkedListBoxExecuteAgainstServers.TabIndex = 1;
             // 
             // tableLayoutPanel11
             // 
@@ -739,17 +703,172 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // buttonNew
+            // tabPageErrors
             // 
-            this.buttonNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonNew.Location = new System.Drawing.Point(65, 0);
-            this.buttonNew.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.buttonNew.Name = "buttonNew";
-            this.buttonNew.Size = new System.Drawing.Size(60, 25);
-            this.buttonNew.TabIndex = 2;
-            this.buttonNew.Text = "Новый";
-            this.buttonNew.UseVisualStyleBackColor = true;
-            this.buttonNew.Click += new System.EventHandler(this.buttonNew_Click);
+            this.tabPageErrors.Controls.Add(this.dataGridViewErrors);
+            this.tabPageErrors.Location = new System.Drawing.Point(4, 22);
+            this.tabPageErrors.Name = "tabPageErrors";
+            this.tabPageErrors.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageErrors.Size = new System.Drawing.Size(796, 295);
+            this.tabPageErrors.TabIndex = 2;
+            this.tabPageErrors.Text = "Ошибки";
+            this.tabPageErrors.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewSuccess
+            // 
+            this.dataGridViewSuccess.AllowUserToAddRows = false;
+            this.dataGridViewSuccess.AllowUserToDeleteRows = false;
+            this.dataGridViewSuccess.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewSuccess.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ID_Success,
+            this.DataTime_Success,
+            this.ServerDBUserPasswd_Success,
+            this.ScriptName_Success});
+            this.dataGridViewSuccess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewSuccess.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewSuccess.Name = "dataGridViewSuccess";
+            this.dataGridViewSuccess.ReadOnly = true;
+            this.dataGridViewSuccess.Size = new System.Drawing.Size(796, 295);
+            this.dataGridViewSuccess.TabIndex = 0;
+            // 
+            // dataGridViewInfo
+            // 
+            this.dataGridViewInfo.AllowUserToAddRows = false;
+            this.dataGridViewInfo.AllowUserToDeleteRows = false;
+            this.dataGridViewInfo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewInfo.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ID_Info,
+            this.Data_Info,
+            this.ServerDB_Info,
+            this.Script_Info,
+            this.MessageInfo_Info});
+            this.dataGridViewInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewInfo.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewInfo.Name = "dataGridViewInfo";
+            this.dataGridViewInfo.ReadOnly = true;
+            this.dataGridViewInfo.Size = new System.Drawing.Size(796, 295);
+            this.dataGridViewInfo.TabIndex = 0;
+            // 
+            // ID_Success
+            // 
+            this.ID_Success.HeaderText = "ID";
+            this.ID_Success.Name = "ID_Success";
+            this.ID_Success.ReadOnly = true;
+            this.ID_Success.Width = 33;
+            // 
+            // DataTime_Success
+            // 
+            this.DataTime_Success.HeaderText = "Дата и время";
+            this.DataTime_Success.Name = "DataTime_Success";
+            this.DataTime_Success.ReadOnly = true;
+            this.DataTime_Success.Width = 125;
+            // 
+            // ServerDBUserPasswd_Success
+            // 
+            this.ServerDBUserPasswd_Success.HeaderText = "Сервер и БД";
+            this.ServerDBUserPasswd_Success.Name = "ServerDBUserPasswd_Success";
+            this.ServerDBUserPasswd_Success.ReadOnly = true;
+            this.ServerDBUserPasswd_Success.Width = 350;
+            // 
+            // ScriptName_Success
+            // 
+            this.ScriptName_Success.HeaderText = "Имя скрипта";
+            this.ScriptName_Success.Name = "ScriptName_Success";
+            this.ScriptName_Success.ReadOnly = true;
+            // 
+            // ID_Info
+            // 
+            this.ID_Info.HeaderText = "ID";
+            this.ID_Info.Name = "ID_Info";
+            this.ID_Info.ReadOnly = true;
+            this.ID_Info.Width = 33;
+            // 
+            // Data_Info
+            // 
+            this.Data_Info.HeaderText = "Дата и время";
+            this.Data_Info.Name = "Data_Info";
+            this.Data_Info.ReadOnly = true;
+            this.Data_Info.Width = 125;
+            // 
+            // ServerDB_Info
+            // 
+            this.ServerDB_Info.HeaderText = "Сервер и БД";
+            this.ServerDB_Info.Name = "ServerDB_Info";
+            this.ServerDB_Info.ReadOnly = true;
+            this.ServerDB_Info.Width = 200;
+            // 
+            // Script_Info
+            // 
+            this.Script_Info.HeaderText = "Скрипт";
+            this.Script_Info.Name = "Script_Info";
+            this.Script_Info.ReadOnly = true;
+            // 
+            // MessageInfo_Info
+            // 
+            this.MessageInfo_Info.HeaderText = "Информационное сообщение";
+            this.MessageInfo_Info.Name = "MessageInfo_Info";
+            this.MessageInfo_Info.ReadOnly = true;
+            this.MessageInfo_Info.Width = 400;
+            // 
+            // dataGridViewErrors
+            // 
+            this.dataGridViewErrors.AllowUserToAddRows = false;
+            this.dataGridViewErrors.AllowUserToDeleteRows = false;
+            this.dataGridViewErrors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewErrors.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ID_Errors,
+            this.DataTime_Errors,
+            this.ServerDBUserPasswd_Errors,
+            this.ScriptName_Errors,
+            this.ErrorCode_Errors,
+            this.ErrorMessage_Errors});
+            this.dataGridViewErrors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewErrors.Location = new System.Drawing.Point(3, 3);
+            this.dataGridViewErrors.Name = "dataGridViewErrors";
+            this.dataGridViewErrors.ReadOnly = true;
+            this.dataGridViewErrors.Size = new System.Drawing.Size(790, 289);
+            this.dataGridViewErrors.TabIndex = 0;
+            // 
+            // ID_Errors
+            // 
+            this.ID_Errors.HeaderText = "ID";
+            this.ID_Errors.Name = "ID_Errors";
+            this.ID_Errors.ReadOnly = true;
+            this.ID_Errors.Width = 33;
+            // 
+            // DataTime_Errors
+            // 
+            this.DataTime_Errors.HeaderText = "Дата и время";
+            this.DataTime_Errors.Name = "DataTime_Errors";
+            this.DataTime_Errors.ReadOnly = true;
+            this.DataTime_Errors.Width = 133;
+            // 
+            // ServerDBUserPasswd_Errors
+            // 
+            this.ServerDBUserPasswd_Errors.HeaderText = "Сервер и БД";
+            this.ServerDBUserPasswd_Errors.Name = "ServerDBUserPasswd_Errors";
+            this.ServerDBUserPasswd_Errors.ReadOnly = true;
+            this.ServerDBUserPasswd_Errors.Width = 150;
+            // 
+            // ScriptName_Errors
+            // 
+            this.ScriptName_Errors.HeaderText = "Скрипт";
+            this.ScriptName_Errors.Name = "ScriptName_Errors";
+            this.ScriptName_Errors.ReadOnly = true;
+            // 
+            // ErrorCode_Errors
+            // 
+            this.ErrorCode_Errors.HeaderText = "Код";
+            this.ErrorCode_Errors.Name = "ErrorCode_Errors";
+            this.ErrorCode_Errors.ReadOnly = true;
+            this.ErrorCode_Errors.Width = 33;
+            // 
+            // ErrorMessage_Errors
+            // 
+            this.ErrorMessage_Errors.HeaderText = "Ошибка";
+            this.ErrorMessage_Errors.Name = "ErrorMessage_Errors";
+            this.ErrorMessage_Errors.ReadOnly = true;
+            this.ErrorMessage_Errors.Width = 450;
             // 
             // MainForm
             // 
@@ -784,12 +903,14 @@
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel9.ResumeLayout(false);
             this.tabControlResults.ResumeLayout(false);
-            this.flowLayoutPanel4.ResumeLayout(false);
-            this.flowLayoutPanel4.PerformLayout();
-            this.tableLayoutPanel10.ResumeLayout(false);
-            this.tableLayoutPanel10.PerformLayout();
+            this.tabPageMessages.ResumeLayout(false);
+            this.tabPageSuccess.ResumeLayout(false);
             this.tableLayoutPanel11.ResumeLayout(false);
             this.tableLayoutPanel11.PerformLayout();
+            this.tabPageErrors.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSuccess)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewErrors)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -834,15 +955,9 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
         private System.Windows.Forms.TabControl tabControlResults;
         private System.Windows.Forms.TabPage tabPageMessages;
-        private System.Windows.Forms.TabPage tabPageResults;
+        private System.Windows.Forms.TabPage tabPageSuccess;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
-        private System.Windows.Forms.Label labelDisplay;
-        private System.Windows.Forms.ComboBox comboBoxDisplay;
-        private System.Windows.Forms.CheckBox checkBoxDataBaseNameDispaly;
-        private System.Windows.Forms.Button buttonResDisSave;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
-        private System.Windows.Forms.CheckBox checkBoxExecuteAgainst;
-        private System.Windows.Forms.CheckedListBox checkedListBoxExecuteAgainstServers;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
         private System.Windows.Forms.TreeView treeViewExecutedScripts;
         private System.Windows.Forms.Label labelExecutedScripts;
@@ -851,6 +966,25 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemImportToDB;
         private System.Windows.Forms.Button buttonNew;
+        private System.Windows.Forms.TabPage tabPageErrors;
+        private System.Windows.Forms.DataGridView dataGridViewSuccess;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID_Success;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DataTime_Success;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ServerDBUserPasswd_Success;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ScriptName_Success;
+        private System.Windows.Forms.DataGridView dataGridViewInfo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID_Info;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Data_Info;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ServerDB_Info;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Script_Info;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MessageInfo_Info;
+        private System.Windows.Forms.DataGridView dataGridViewErrors;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID_Errors;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DataTime_Errors;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ServerDBUserPasswd_Errors;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ScriptName_Errors;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ErrorCode_Errors;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ErrorMessage_Errors;
     }
 }
 

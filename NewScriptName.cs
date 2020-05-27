@@ -26,32 +26,37 @@ namespace SQL_Multi_Flow
 
         private void buttonNewScriptOk_Click(object sender, EventArgs e)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            if (string.IsNullOrEmpty(textBoxScriptName.Text) == false)
             {
-                connection.Open();
-
-                SqlCommand command = new SqlCommand("Scripts.AddScript", connection);
-                command.Parameters.AddWithValue("@ScriptName", textBoxScriptName.Text.ToString());
-                command.Parameters.AddWithValue("@ScriptContent", "");
-
-                command.CommandType = CommandType.StoredProcedure;
-
-                command.ExecuteNonQuery();
-
-                command.CommandType = CommandType.Text;
-                command.CommandText = "SELECT st.ScriptName FROM Scripts.ScriptsTable st";
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                while(reader.Read())
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    checkedListBoxScripts.Items.Add(reader.GetValue(0));
+                    connection.Open();
+
+                    SqlCommand command = new SqlCommand("Scripts.AddScript", connection);
+                    command.Parameters.AddWithValue("@ScriptName", textBoxScriptName.Text.ToString());
+                    command.Parameters.AddWithValue("@ScriptContent", "");
+
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.ExecuteNonQuery();
+
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "SELECT st.ScriptName FROM Scripts.ScriptsTable st";
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    checkedListBoxScripts.Items.Clear();
+
+                    while (reader.Read())
+                    {
+                        checkedListBoxScripts.Items.Add(reader.GetValue(0));
+                    }
+
+                    checkedListBoxScripts.SelectedItem = textBoxScriptName.Text.ToString();
+
                 }
-
-                checkedListBoxScripts.SelectedItem = textBoxScriptName.Text.ToString();
-
             }
-                this.Close();
+            this.Close();
         }
 
         private void buttonNewScriptCancel_Click(object sender, EventArgs e)
