@@ -32,16 +32,16 @@
             this.ToolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemImportToDB = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItemTools = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
+            this.инструментыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItemDBConnectionSetup = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonParseScript = new System.Windows.Forms.Button();
-            this.buttonExecute = new System.Windows.Forms.Button();
-            this.labelOnError = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.labelStatusMessage = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -62,22 +62,44 @@
             this.labelDBList = new System.Windows.Forms.Label();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.buttonConfiguration = new System.Windows.Forms.Button();
             this.checkBoxDataBases = new System.Windows.Forms.CheckBox();
             this.checkedListBoxDB = new System.Windows.Forms.CheckedListBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.tabControlResults = new System.Windows.Forms.TabControl();
             this.tabPageSuccess = new System.Windows.Forms.TabPage();
+            this.listViewCompleate = new System.Windows.Forms.ListView();
+            this.ID_Compleate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.DataTime_Compleate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ServerDBUserPasswd_Compleate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ScriptName_Compleate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageMessages = new System.Windows.Forms.TabPage();
-            this.tabPageErrors = new System.Windows.Forms.TabPage();
+            this.listViewInfo = new System.Windows.Forms.ListView();
+            this.ID_Info = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Data_Info = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ServerDB_Info = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Script_Info = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MessageInfo_Info = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPageErrorsSQL = new System.Windows.Forms.TabPage();
+            this.listViewErrorsSQL = new System.Windows.Forms.ListView();
+            this.ID_Errors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.DataTime_Errors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ServerDBUserPasswd_Errors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ScriptName_Errors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ErrorCode_Errors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ErrorMessage_Errors = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonRaportsClear = new System.Windows.Forms.Button();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.listViewServers = new System.Windows.Forms.ListView();
+            this.Server_compleate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-            this.treeViewExecutedScripts = new System.Windows.Forms.TreeView();
             this.labelExecutedScripts = new System.Windows.Forms.Label();
+            this.listViewSuccessesScripts = new System.Windows.Forms.ListView();
+            this.Scripts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.folderBrowserDialogScripts = new System.Windows.Forms.FolderBrowserDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemExpandDB = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -92,6 +114,11 @@
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
             this.tabControlResults.SuspendLayout();
+            this.tabPageSuccess.SuspendLayout();
+            this.tabPageMessages.SuspendLayout();
+            this.tabPageErrorsSQL.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel10.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -117,12 +144,6 @@
             this.ToolStripMenuItemClose.Size = new System.Drawing.Size(239, 22);
             this.ToolStripMenuItemClose.Text = "Закрыть";
             // 
-            // ToolStripMenuItemTools
-            // 
-            this.ToolStripMenuItemTools.Name = "ToolStripMenuItemTools";
-            this.ToolStripMenuItemTools.Size = new System.Drawing.Size(95, 20);
-            this.ToolStripMenuItemTools.Text = "Инструменты";
-            // 
             // ToolStripMenuItemHelp
             // 
             this.ToolStripMenuItemHelp.Name = "ToolStripMenuItemHelp";
@@ -133,13 +154,29 @@
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ToolStripMenuItemFile,
-            this.ToolStripMenuItemTools,
+            this.инструментыToolStripMenuItem,
             this.ToolStripMenuItemHelp});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(1353, 24);
             this.MainMenu.TabIndex = 0;
             this.MainMenu.Text = "Main menu";
+            // 
+            // инструментыToolStripMenuItem
+            // 
+            this.инструментыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItemDBConnectionSetup,
+            this.toolStripMenuItemExpandDB});
+            this.инструментыToolStripMenuItem.Name = "инструментыToolStripMenuItem";
+            this.инструментыToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
+            this.инструментыToolStripMenuItem.Text = "Инструменты";
+            // 
+            // ToolStripMenuItemDBConnectionSetup
+            // 
+            this.ToolStripMenuItemDBConnectionSetup.Name = "ToolStripMenuItemDBConnectionSetup";
+            this.ToolStripMenuItemDBConnectionSetup.Size = new System.Drawing.Size(227, 22);
+            this.ToolStripMenuItemDBConnectionSetup.Text = "Настройка соеденения с БД";
+            this.ToolStripMenuItemDBConnectionSetup.Click += new System.EventHandler(this.connectionDBConfiguration);
             // 
             // tableLayoutPanel1
             // 
@@ -163,12 +200,12 @@
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.2509F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.79855F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.95054F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.15711F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.818317F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 68.95011F));
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.labelOnError, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.comboBox1, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelStatus, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelStatusMessage, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(5, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
@@ -184,11 +221,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.Controls.Add(this.buttonParseScript);
-            this.flowLayoutPanel1.Controls.Add(this.buttonExecute);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(446, 25);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(311, 25);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // buttonParseScript
@@ -202,36 +238,28 @@
             this.buttonParseScript.UseVisualStyleBackColor = true;
             this.buttonParseScript.Click += new System.EventHandler(this.buttonParseScript_Click);
             // 
-            // buttonExecute
+            // labelStatus
             // 
-            this.buttonExecute.Location = new System.Drawing.Point(166, 0);
-            this.buttonExecute.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonExecute.Name = "buttonExecute";
-            this.buttonExecute.Size = new System.Drawing.Size(166, 25);
-            this.buttonExecute.TabIndex = 1;
-            this.buttonExecute.Text = "Выполнить(F5)";
-            this.buttonExecute.UseVisualStyleBackColor = true;
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelStatus.Location = new System.Drawing.Point(343, 3);
+            this.labelStatus.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(73, 20);
+            this.labelStatus.TabIndex = 1;
+            this.labelStatus.Text = "Статус:";
             // 
-            // labelOnError
+            // labelStatusMessage
             // 
-            this.labelOnError.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelOnError.AutoSize = true;
-            this.labelOnError.Location = new System.Drawing.Point(1000, 5);
-            this.labelOnError.Margin = new System.Windows.Forms.Padding(0, 5, 3, 0);
-            this.labelOnError.Name = "labelOnError";
-            this.labelOnError.Size = new System.Drawing.Size(71, 13);
-            this.labelOnError.TabIndex = 2;
-            this.labelOnError.Text = "При ошибке:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(1077, 2);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(3, 2, 0, 0);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(266, 21);
-            this.comboBox1.TabIndex = 1;
+            this.labelStatusMessage.AutoSize = true;
+            this.labelStatusMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelStatusMessage.Location = new System.Drawing.Point(426, 3);
+            this.labelStatusMessage.Margin = new System.Windows.Forms.Padding(10, 3, 0, 0);
+            this.labelStatusMessage.Name = "labelStatusMessage";
+            this.labelStatusMessage.Size = new System.Drawing.Size(81, 20);
+            this.labelStatusMessage.TabIndex = 2;
+            this.labelStatusMessage.Text = "Message";
             // 
             // tableLayoutPanel3
             // 
@@ -490,7 +518,6 @@
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.comboBox2);
-            this.flowLayoutPanel3.Controls.Add(this.buttonConfiguration);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 25);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
@@ -503,21 +530,9 @@
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(3, 3);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(230, 21);
+            this.comboBox2.Size = new System.Drawing.Size(334, 21);
             this.comboBox2.TabIndex = 0;
             this.comboBox2.SelectedValueChanged += new System.EventHandler(this.comboBox2_SelectedValueChanged);
-            // 
-            // buttonConfiguration
-            // 
-            this.buttonConfiguration.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonConfiguration.Location = new System.Drawing.Point(236, 0);
-            this.buttonConfiguration.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonConfiguration.Name = "buttonConfiguration";
-            this.buttonConfiguration.Size = new System.Drawing.Size(97, 25);
-            this.buttonConfiguration.TabIndex = 1;
-            this.buttonConfiguration.Text = "Конфигурация";
-            this.buttonConfiguration.UseVisualStyleBackColor = true;
-            this.buttonConfiguration.Click += new System.EventHandler(this.buttonConfiguration_Click);
             // 
             // checkBoxDataBases
             // 
@@ -582,17 +597,19 @@
             // 
             this.tabControlResults.Controls.Add(this.tabPageSuccess);
             this.tabControlResults.Controls.Add(this.tabPageMessages);
-            this.tabControlResults.Controls.Add(this.tabPageErrors);
+            this.tabControlResults.Controls.Add(this.tabPageErrorsSQL);
             this.tabControlResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlResults.Location = new System.Drawing.Point(0, 25);
             this.tabControlResults.Margin = new System.Windows.Forms.Padding(0);
             this.tabControlResults.Name = "tabControlResults";
+            this.tabControlResults.Padding = new System.Drawing.Point(0, 0);
             this.tabControlResults.SelectedIndex = 0;
             this.tabControlResults.Size = new System.Drawing.Size(804, 321);
             this.tabControlResults.TabIndex = 0;
             // 
             // tabPageSuccess
             // 
+            this.tabPageSuccess.Controls.Add(this.listViewCompleate);
             this.tabPageSuccess.Location = new System.Drawing.Point(4, 22);
             this.tabPageSuccess.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageSuccess.Name = "tabPageSuccess";
@@ -601,8 +618,45 @@
             this.tabPageSuccess.Text = "Успешные";
             this.tabPageSuccess.UseVisualStyleBackColor = true;
             // 
+            // listViewCompleate
+            // 
+            this.listViewCompleate.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ID_Compleate,
+            this.DataTime_Compleate,
+            this.ServerDBUserPasswd_Compleate,
+            this.ScriptName_Compleate});
+            this.listViewCompleate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewCompleate.HideSelection = false;
+            this.listViewCompleate.Location = new System.Drawing.Point(0, 0);
+            this.listViewCompleate.Name = "listViewCompleate";
+            this.listViewCompleate.Size = new System.Drawing.Size(796, 295);
+            this.listViewCompleate.TabIndex = 0;
+            this.listViewCompleate.UseCompatibleStateImageBehavior = false;
+            this.listViewCompleate.View = System.Windows.Forms.View.Details;
+            // 
+            // ID_Compleate
+            // 
+            this.ID_Compleate.Text = "ID";
+            this.ID_Compleate.Width = 33;
+            // 
+            // DataTime_Compleate
+            // 
+            this.DataTime_Compleate.Text = "Дата и время";
+            this.DataTime_Compleate.Width = 125;
+            // 
+            // ServerDBUserPasswd_Compleate
+            // 
+            this.ServerDBUserPasswd_Compleate.Text = "Сервер и БД";
+            this.ServerDBUserPasswd_Compleate.Width = 250;
+            // 
+            // ScriptName_Compleate
+            // 
+            this.ScriptName_Compleate.Text = "Скрипт";
+            this.ScriptName_Compleate.Width = 175;
+            // 
             // tabPageMessages
             // 
+            this.tabPageMessages.Controls.Add(this.listViewInfo);
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageMessages.Name = "tabPageMessages";
@@ -611,18 +665,111 @@
             this.tabPageMessages.Text = "Cообщения";
             this.tabPageMessages.UseVisualStyleBackColor = true;
             // 
-            // tabPageErrors
+            // listViewInfo
             // 
-            this.tabPageErrors.Location = new System.Drawing.Point(4, 22);
-            this.tabPageErrors.Name = "tabPageErrors";
-            this.tabPageErrors.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageErrors.Size = new System.Drawing.Size(796, 295);
-            this.tabPageErrors.TabIndex = 2;
-            this.tabPageErrors.Text = "Ошибки";
-            this.tabPageErrors.UseVisualStyleBackColor = true;
+            this.listViewInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ID_Info,
+            this.Data_Info,
+            this.ServerDB_Info,
+            this.Script_Info,
+            this.MessageInfo_Info});
+            this.listViewInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewInfo.HideSelection = false;
+            this.listViewInfo.Location = new System.Drawing.Point(0, 0);
+            this.listViewInfo.Name = "listViewInfo";
+            this.listViewInfo.Size = new System.Drawing.Size(796, 295);
+            this.listViewInfo.TabIndex = 0;
+            this.listViewInfo.UseCompatibleStateImageBehavior = false;
+            this.listViewInfo.View = System.Windows.Forms.View.Details;
+            // 
+            // ID_Info
+            // 
+            this.ID_Info.Text = "ID";
+            this.ID_Info.Width = 33;
+            // 
+            // Data_Info
+            // 
+            this.Data_Info.Text = "Дата и время";
+            this.Data_Info.Width = 125;
+            // 
+            // ServerDB_Info
+            // 
+            this.ServerDB_Info.Text = "Сервер и БД";
+            this.ServerDB_Info.Width = 250;
+            // 
+            // Script_Info
+            // 
+            this.Script_Info.Text = "Скрипт";
+            this.Script_Info.Width = 100;
+            // 
+            // MessageInfo_Info
+            // 
+            this.MessageInfo_Info.Text = "Сообщение";
+            this.MessageInfo_Info.Width = 400;
+            // 
+            // tabPageErrorsSQL
+            // 
+            this.tabPageErrorsSQL.Controls.Add(this.listViewErrorsSQL);
+            this.tabPageErrorsSQL.Location = new System.Drawing.Point(4, 22);
+            this.tabPageErrorsSQL.Name = "tabPageErrorsSQL";
+            this.tabPageErrorsSQL.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageErrorsSQL.Size = new System.Drawing.Size(796, 295);
+            this.tabPageErrorsSQL.TabIndex = 2;
+            this.tabPageErrorsSQL.Text = "Ошибки SQL";
+            this.tabPageErrorsSQL.UseVisualStyleBackColor = true;
+            // 
+            // listViewErrorsSQL
+            // 
+            this.listViewErrorsSQL.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ID_Errors,
+            this.DataTime_Errors,
+            this.ServerDBUserPasswd_Errors,
+            this.ScriptName_Errors,
+            this.ErrorCode_Errors,
+            this.ErrorMessage_Errors});
+            this.listViewErrorsSQL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewErrorsSQL.HideSelection = false;
+            this.listViewErrorsSQL.Location = new System.Drawing.Point(3, 3);
+            this.listViewErrorsSQL.Margin = new System.Windows.Forms.Padding(0);
+            this.listViewErrorsSQL.Name = "listViewErrorsSQL";
+            this.listViewErrorsSQL.Size = new System.Drawing.Size(790, 289);
+            this.listViewErrorsSQL.TabIndex = 0;
+            this.listViewErrorsSQL.UseCompatibleStateImageBehavior = false;
+            this.listViewErrorsSQL.View = System.Windows.Forms.View.Details;
+            // 
+            // ID_Errors
+            // 
+            this.ID_Errors.Text = "ID";
+            this.ID_Errors.Width = 33;
+            // 
+            // DataTime_Errors
+            // 
+            this.DataTime_Errors.Text = "Дата и время";
+            this.DataTime_Errors.Width = 125;
+            // 
+            // ServerDBUserPasswd_Errors
+            // 
+            this.ServerDBUserPasswd_Errors.Text = "Сервер и БД";
+            this.ServerDBUserPasswd_Errors.Width = 250;
+            // 
+            // ScriptName_Errors
+            // 
+            this.ScriptName_Errors.Text = "Скрипт";
+            this.ScriptName_Errors.Width = 100;
+            // 
+            // ErrorCode_Errors
+            // 
+            this.ErrorCode_Errors.Text = "Код";
+            this.ErrorCode_Errors.Width = 33;
+            // 
+            // ErrorMessage_Errors
+            // 
+            this.ErrorMessage_Errors.Text = "Сообщение";
+            this.ErrorMessage_Errors.Width = 400;
             // 
             // flowLayoutPanel4
             // 
+            this.flowLayoutPanel4.Controls.Add(this.buttonRaportsClear);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
@@ -630,10 +777,22 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(804, 25);
             this.flowLayoutPanel4.TabIndex = 1;
             // 
+            // buttonRaportsClear
+            // 
+            this.buttonRaportsClear.Location = new System.Drawing.Point(0, 0);
+            this.buttonRaportsClear.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonRaportsClear.Name = "buttonRaportsClear";
+            this.buttonRaportsClear.Size = new System.Drawing.Size(108, 23);
+            this.buttonRaportsClear.TabIndex = 0;
+            this.buttonRaportsClear.Text = "Очистить отчеты";
+            this.buttonRaportsClear.UseVisualStyleBackColor = true;
+            this.buttonRaportsClear.Click += new System.EventHandler(this.buttonRaportsClear_Click);
+            // 
             // tableLayoutPanel10
             // 
             this.tableLayoutPanel10.ColumnCount = 1;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel10.Controls.Add(this.listViewServers, 0, 2);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel10.Location = new System.Drawing.Point(268, 0);
             this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
@@ -645,12 +804,31 @@
             this.tableLayoutPanel10.Size = new System.Drawing.Size(268, 346);
             this.tableLayoutPanel10.TabIndex = 1;
             // 
+            // listViewServers
+            // 
+            this.listViewServers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Server_compleate});
+            this.listViewServers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewServers.HideSelection = false;
+            this.listViewServers.Location = new System.Drawing.Point(3, 78);
+            this.listViewServers.Name = "listViewServers";
+            this.listViewServers.Size = new System.Drawing.Size(262, 265);
+            this.listViewServers.TabIndex = 0;
+            this.listViewServers.UseCompatibleStateImageBehavior = false;
+            this.listViewServers.View = System.Windows.Forms.View.Details;
+            this.listViewServers.SelectedIndexChanged += new System.EventHandler(this.listViewServers_SelectedIndexChanged);
+            // 
+            // Server_compleate
+            // 
+            this.Server_compleate.Text = "Сервер";
+            this.Server_compleate.Width = 300;
+            // 
             // tableLayoutPanel11
             // 
             this.tableLayoutPanel11.ColumnCount = 1;
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Controls.Add(this.treeViewExecutedScripts, 0, 2);
             this.tableLayoutPanel11.Controls.Add(this.labelExecutedScripts, 0, 1);
+            this.tableLayoutPanel11.Controls.Add(this.listViewSuccessesScripts, 0, 2);
             this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel11.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
@@ -661,15 +839,6 @@
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel11.Size = new System.Drawing.Size(265, 346);
             this.tableLayoutPanel11.TabIndex = 2;
-            // 
-            // treeViewExecutedScripts
-            // 
-            this.treeViewExecutedScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeViewExecutedScripts.Location = new System.Drawing.Point(0, 75);
-            this.treeViewExecutedScripts.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
-            this.treeViewExecutedScripts.Name = "treeViewExecutedScripts";
-            this.treeViewExecutedScripts.Size = new System.Drawing.Size(265, 268);
-            this.treeViewExecutedScripts.TabIndex = 0;
             // 
             // labelExecutedScripts
             // 
@@ -682,10 +851,34 @@
             this.labelExecutedScripts.TabIndex = 1;
             this.labelExecutedScripts.Text = "Выполненные скрипты:";
             // 
+            // listViewSuccessesScripts
+            // 
+            this.listViewSuccessesScripts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Scripts});
+            this.listViewSuccessesScripts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewSuccessesScripts.HideSelection = false;
+            this.listViewSuccessesScripts.Location = new System.Drawing.Point(3, 78);
+            this.listViewSuccessesScripts.Name = "listViewSuccessesScripts";
+            this.listViewSuccessesScripts.Size = new System.Drawing.Size(259, 265);
+            this.listViewSuccessesScripts.TabIndex = 2;
+            this.listViewSuccessesScripts.UseCompatibleStateImageBehavior = false;
+            this.listViewSuccessesScripts.View = System.Windows.Forms.View.Details;
+            // 
+            // Scripts
+            // 
+            this.Scripts.Text = "Скрипты";
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // toolStripMenuItemExpandDB
+            // 
+            this.toolStripMenuItemExpandDB.Name = "toolStripMenuItemExpandDB";
+            this.toolStripMenuItemExpandDB.Size = new System.Drawing.Size(227, 22);
+            this.toolStripMenuItemExpandDB.Text = "Развернуть БД";
+            this.toolStripMenuItemExpandDB.Click += new System.EventHandler(this.toolStripMenuItemExpandDB_Click);
             // 
             // MainForm
             // 
@@ -720,6 +913,11 @@
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel9.ResumeLayout(false);
             this.tabControlResults.ResumeLayout(false);
+            this.tabPageSuccess.ResumeLayout(false);
+            this.tabPageMessages.ResumeLayout(false);
+            this.tabPageErrorsSQL.ResumeLayout(false);
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel10.ResumeLayout(false);
             this.tableLayoutPanel11.ResumeLayout(false);
             this.tableLayoutPanel11.PerformLayout();
             this.ResumeLayout(false);
@@ -731,16 +929,12 @@
 
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemFile;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemClose;
-        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemTools;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemHelp;
         private System.Windows.Forms.MenuStrip MainMenu;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button buttonParseScript;
-        private System.Windows.Forms.Button buttonExecute;
-        private System.Windows.Forms.Label labelOnError;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
@@ -760,24 +954,50 @@
         private System.Windows.Forms.Label labelDBList;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.Button buttonConfiguration;
         private System.Windows.Forms.CheckBox checkBoxDataBases;
         private System.Windows.Forms.CheckedListBox checkedListBoxDB;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
-        private System.Windows.Forms.TabControl tabControlResults;
-        private System.Windows.Forms.TabPage tabPageMessages;
-        private System.Windows.Forms.TabPage tabPageSuccess;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
-        private System.Windows.Forms.TreeView treeViewExecutedScripts;
         private System.Windows.Forms.Label labelExecutedScripts;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogScripts;
         private System.Windows.Forms.CheckBox checkBoxOrder;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemImportToDB;
         private System.Windows.Forms.Button buttonNew;
-        private System.Windows.Forms.TabPage tabPageErrors;
+        private System.Windows.Forms.TabControl tabControlResults;
+        private System.Windows.Forms.TabPage tabPageSuccess;
+        private System.Windows.Forms.ListView listViewCompleate;
+        private System.Windows.Forms.ColumnHeader ID_Compleate;
+        private System.Windows.Forms.ColumnHeader DataTime_Compleate;
+        private System.Windows.Forms.ColumnHeader ServerDBUserPasswd_Compleate;
+        private System.Windows.Forms.ColumnHeader ScriptName_Compleate;
+        private System.Windows.Forms.TabPage tabPageMessages;
+        private System.Windows.Forms.ListView listViewInfo;
+        private System.Windows.Forms.ColumnHeader ID_Info;
+        private System.Windows.Forms.ColumnHeader Data_Info;
+        private System.Windows.Forms.ColumnHeader ServerDB_Info;
+        private System.Windows.Forms.ColumnHeader Script_Info;
+        private System.Windows.Forms.ColumnHeader MessageInfo_Info;
+        private System.Windows.Forms.TabPage tabPageErrorsSQL;
+        private System.Windows.Forms.ListView listViewErrorsSQL;
+        private System.Windows.Forms.ColumnHeader ID_Errors;
+        private System.Windows.Forms.ColumnHeader DataTime_Errors;
+        private System.Windows.Forms.ColumnHeader ServerDBUserPasswd_Errors;
+        private System.Windows.Forms.ColumnHeader ScriptName_Errors;
+        private System.Windows.Forms.ColumnHeader ErrorCode_Errors;
+        private System.Windows.Forms.ColumnHeader ErrorMessage_Errors;
+        private System.Windows.Forms.Button buttonRaportsClear;
+        private System.Windows.Forms.ListView listViewServers;
+        private System.Windows.Forms.ColumnHeader Server_compleate;
+        private System.Windows.Forms.ListView listViewSuccessesScripts;
+        private System.Windows.Forms.ColumnHeader Scripts;
+        private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Label labelStatusMessage;
+        private System.Windows.Forms.ToolStripMenuItem инструментыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemDBConnectionSetup;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExpandDB;
     }
 }
 

@@ -18,6 +18,7 @@ using System.Data.Linq;
 using static SQL_Multi_Flow.Infrastructure.StaticMethods;
 using System.Threading;
 using System.Timers;
+using System.Globalization;
 
 namespace SQL_Multi_Flow
 {
@@ -34,8 +35,13 @@ namespace SQL_Multi_Flow
         #region Main Form Load
         private void MainForm_Load(object sender, EventArgs e)
         {
+            this.Text = "SQL Multiform";
+
             string markers = "SELECT m.MarkerName FROM ServersAndMarkers.Markers m";
             string scripts = "SELECT st.ScriptName FROM Scripts.ScriptsTable AS st";
+
+            labelStatusMessage.Text = $"[{DateTime.Now}] Ожидание, подготовка данных...";
+            labelStatusMessage.ForeColor = Color.Orange;
 
             try
             {
@@ -75,8 +81,6 @@ namespace SQL_Multi_Flow
                         markersList.Add(reader.GetValue(0).ToString());
                     }
 
-                    this.comboBox1.Items.AddRange(new string[] { "Сценарий 1", "Сценарий 2", "Сценарий 3", "Сценарий 4", "Сценарий 5" });
-                    this.comboBox1.SelectedIndex = 0;
 
                     this.comboBox2.Items.Add("All");
                     this.comboBox2.Items.AddRange(markersList.ToArray());
@@ -88,7 +92,7 @@ namespace SQL_Multi_Flow
             catch (Exception Ex)
             {
                 MessageBox.Show(Ex.Message);
-                new DBListConfig().Show();
+                new DBListConfig().Show(this);
             }
 
         }
@@ -358,7 +362,7 @@ namespace SQL_Multi_Flow
             }
         }
 
-        private void buttonConfiguration_Click(object sender, EventArgs e)
+        private void connectionDBConfiguration(object sender, EventArgs e)
         {
             var DBListConfig = new DBListConfig();
             DBListConfig.Show(this);
@@ -409,43 +413,119 @@ namespace SQL_Multi_Flow
                 serversList.Add(i.ToString());
             }
 
-            //using (var timer = new System.Windows.Forms.Timer())
-            //{
-            //    timer.Tick += Timer_Tick;
-            //    timer.Interval = 250;
-            //    timer.Start();
-
-
-            //    timer.Stop();
-            //}
-
-            await Dispatcher(connectionString, serversList, scriptsList, Threads);
-
-
-
-            await Task.Run(() =>
+            try
             {
-                MessageBox.Show("Завершено");
-            });
+                labelStatusMessage.Text = $"[{DateTime.Now}] Разливка...";
+                labelStatusMessage.ForeColor = Color.Blue;
+                await Dispatcher(connectionString, serversList, scriptsList, Threads);
 
-            await Task.Run(async () =>
+                await Task.Run(async () =>
+                {
+                    await ShowResults(connectionString, listViewCompleate, listViewInfo, listViewErrorsSQL, listViewServers);
+                });
+
+                await Task.Run(async () =>
+                {
+                    labelStatusMessage.ForeColor = Color.BlueViolet;
+
+                    for (int i = 20; i > 0; i--)
+                    {
+                        labelStatusMessage.Text = $"[{DateTime.Now}] Ожидание закрития соедений {i} сек.";
+
+                        Thread.Sleep(1000);
+
+                        if (i % 5 == 0)
+                        {
+                            await ShowResults(connectionString, listViewCompleate, listViewInfo, listViewErrorsSQL, listViewServers);
+                        }
+                    }
+
+                    labelStatusMessage.ForeColor = Color.Green;
+                    labelStatusMessage.Text = $"[{DateTime.Now}] Разливка завершена";
+
+                });
+            }
+            catch (Exception ex)
             {
-                await ShowResults(connectionString, dataGridViewSuccess, dataGridViewInfo, dataGridViewErrors);
-            });
-
-
-
+                labelStatusMessage.ForeColor = Color.Red;
+                labelStatusMessage.Text = $"[{DateTime.Now}] Исключительная ситуация:{ex.Message}";
+                Console.Beep();
+                Console.Beep();
+                Console.Beep();
+            }
         }
 
-        private async void Timer_Tick(object sender, EventArgs e)
-        {
-            await Task.Run(async () =>
-            {
-                await ShowResults(connectionString, dataGridViewSuccess, dataGridViewInfo, dataGridViewErrors);
-            });
 
+        private void listViewServers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            DataContext successesContext = new DataContext(connectionString);
+            listViewSuccessesScripts.Items.Clear();
+
+            string request = "";
+
+
+            foreach (ListViewItem i in listViewServers.SelectedItems)
+            {
+                request += $"'{i.Text}', ";
+            }
+
+            if (request.Length > 0)
+            {
+                request = request.Substring(0, request.Length - 2);
+                var scriptsList = successesContext.ExecuteQuery<string>($"SELECT c.ScriptName FROM Raports.Compleate c  WHERE c.ServerDBUserPasswd IN({request})");
+
+                foreach (var i in scriptsList.Distinct())
+                {
+                    listViewSuccessesScripts.Items.Add(i);
+                }
+            }
         }
 
         #endregion Parse
+
+        #region ClearRaports
+        private async void buttonRaportsClear_Click(object sender, EventArgs e)
+        {
+            await ClearRaports(connectionString, listViewCompleate, listViewErrorsSQL, listViewInfo, listViewServers, listViewSuccessesScripts);
+
+            labelStatusMessage.Text = $"[{DateTime.Now}] Отчеты очишены, ожидание...";
+            labelStatusMessage.ForeColor = Color.Orange;
+        }
+        #endregion ClearRaports
+
+        private async void toolStripMenuItemExpandDB_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                string script = ConfigurationManager.AppSettings["INITScript"].Replace("CHANGEME", "SomeDataBase");
+
+
+                try
+                {
+                    string connectionString = $"Server={ConfigurationManager.AppSettings["server"]};Database=master;User={ConfigurationManager.AppSettings["login"]};Password={ConfigurationManager.AppSettings["password"]};";
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        DataContext context = new DataContext(connection);
+
+                        foreach (var i in script.Split(new string[] { "go;", "GO;", "go", "GO" }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            context.ExecuteCommand(i);
+                        }
+                    }
+                    MessageBox.Show("Is end");
+                }
+                catch (Microsoft.Data.SqlClient.SqlException ex)
+                {
+                    MessageBox.Show($"{ex.Number} {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
+            });
+        }
     }
 }

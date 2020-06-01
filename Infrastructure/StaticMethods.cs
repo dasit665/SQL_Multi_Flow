@@ -45,7 +45,7 @@ namespace SQL_Multi_Flow.Infrastructure
         class nestedRaportsInfo
         {
             public int ID { get; set; }
-            public DateTime Date { get; set; }
+            public DateTime DataTime { get; set; }
             public string ServerDB { get; set; }
             public string Script { get; set; }
             public string MessageInfo { get; set; }
@@ -63,7 +63,7 @@ namespace SQL_Multi_Flow.Infrastructure
         #endregion nestedClasses
 
         #region ShowResults
-        public static async Task ShowResults(string connectionString, DataGridView dataGridViewSuccess, DataGridView dataGridViewInfo, DataGridView dataGridViewErrors)
+        public static async Task ShowResults(string connectionString, ListView listViewCompleate, ListView listViewInfo, ListView listViewErrorsSQL, ListView listViewServers)
         {
             await Task.Run(() =>
             {
@@ -76,33 +76,83 @@ namespace SQL_Multi_Flow.Infrastructure
                 DataContext errorsContext = new DataContext(connectionString);
                 List<nestedRaportsErrors> errorsList = new List<nestedRaportsErrors>();
 
+                List<ListViewItem> viewItems = new List<ListViewItem>();
+
+                DataContext serversContext = new DataContext(connectionString);
+
                 compleateList = compleateContext.ExecuteQuery<nestedRaportsCompleate>("SELECT c.ID, c.DataTime, c.ServerDBUserPasswd, c.ScriptName FROM Raports.Compleate c").ToList();
 
-                infoList = infoContext.ExecuteQuery<nestedRaportsInfo>("SELECT i.ID, i.Data, i.ServerDB, i.Script, i.MessageInfo FROM RushDataBasesServersList.Raports.Info i").ToList();
+                infoList = infoContext.ExecuteQuery<nestedRaportsInfo>("SELECT i.ID, i.DataTime, i.ServerDB, i.Script, i.MessageInfo FROM RushDataBasesServersList.Raports.Info i").ToList();
 
                 errorsList = errorsContext.ExecuteQuery<nestedRaportsErrors>("SELECT e.ID, e.DataTime, e.ServerDBUserPasswd, e.ScriptName, e.ErrorCode, e.ErrorMessage FROM RushDataBasesServersList.Raports.Errors e").ToList();
 
-                dataGridViewSuccess.Rows.Clear();
                 foreach (var i in compleateList)
                 {
-                    dataGridViewSuccess.Rows.Add(new object[] { i.ID.ToString(), i.DataTime.ToString(), i.ServerDBUserPasswd.ToString(), i.ScriptName.ToString()});
+                    viewItems.Add(new ListViewItem(new string[] {i.ID.ToString(), i.DataTime.ToString(), i.ServerDBUserPasswd.ToString(), i.ScriptName.ToString()}));
                 }
 
-                dataGridViewInfo.Rows.Clear();
+                listViewCompleate.Items.Clear();
+                listViewCompleate.Items.AddRange(viewItems.ToArray());
+                viewItems.Clear();
+
                 foreach (var i in infoList)
                 {
-                    dataGridViewInfo.Rows.Add(new object[] { i.ID.ToString(), i.Date.ToString(), i.ServerDB.ToString(), i.Script.ToString(), i.MessageInfo.ToString()});
+                    viewItems.Add(new ListViewItem(new string[] {i.ID.ToString(), i.DataTime.ToString(), i.ServerDB.ToString(), i.Script.ToString(), i.MessageInfo.ToString()}));
                 }
 
-                dataGridViewErrors.Rows.Clear();
+                listViewInfo.Items.Clear();
+                listViewInfo.Items.AddRange(viewItems.ToArray());
+                viewItems.Clear();
+
                 foreach (var i in errorsList)
                 {
-                    dataGridViewErrors.Rows.Add(new object[] { i.ID.ToString(), i.DataTime.ToString(), i.ServerDBUserPasswd.ToString(), i.ScriptName.ToString(), i.ErrorCode.ToString(), i.ErrorMessage.ToString()});
+                    viewItems.Add(new ListViewItem(new string[] {i.ID.ToString(), i.DataTime.ToString(), i.ServerDBUserPasswd.ToString(), i.ScriptName.ToString(), i.ErrorCode.ToString(), i.ErrorMessage.ToString()}));
                 }
+                listViewErrorsSQL.Items.Clear();
+                listViewErrorsSQL.Items.AddRange(viewItems.ToArray());
+                viewItems.Clear();
+
+                var serversList = serversContext.ExecuteQuery<string>("SELECT DISTINCT c.ServerDBUserPasswd FROM Raports.Compleate c");
+                foreach (var i in serversList)
+                {
+                    viewItems.Add(new ListViewItem(i));
+                }
+
+                listViewServers.Items.Clear();
+                listViewServers.Items.AddRange(viewItems.ToArray());
+                viewItems.Clear();
+
             });
 
         }
+
+
         #endregion ShowResults
+
+        #region ClearRaports
+        public static async Task ClearRaports(string connectionString, params ListView[] ps)
+        {
+            await Task.Run(() =>
+            {
+                foreach (var i in ps)
+                {
+                    i.Items.Clear();
+                }
+
+                DataContext context = new DataContext(connectionString);
+
+                context.ExecuteCommand("TRUNCATE TABLE RushDataBasesServersList.Raports.Info");
+                context.ExecuteCommand("DBCC CHECKIDENT('Raports.Info', RESEED, 1)");
+
+                context.ExecuteCommand("TRUNCATE TABLE RushDataBasesServersList.Raports.Errors");
+                context.ExecuteCommand("DBCC CHECKIDENT('Raports.Errors', RESEED, 1)");
+
+                context.ExecuteCommand("TRUNCATE TABLE RushDataBasesServersList.Raports.Compleate");
+                context.ExecuteCommand("DBCC CHECKIDENT('Raports.Compleate', RESEED, 1)");
+
+            });
+        }
+        #endregion ClearRaports
 
         #region Dispatcher
         public static async Task Dispatcher(string connectionString, IEnumerable<string> serversList, IEnumerable<string> scriptsList, int threads)
@@ -112,8 +162,8 @@ namespace SQL_Multi_Flow.Infrastructure
                 try
                 {
                     if (string.IsNullOrEmpty(connectionString)) throw new Exception("Connection string is empty");
-                    if (serversList.Count() < 1) throw new Exception("Server list is empty");
-                    if (scriptsList.Count() < 1) throw new Exception("Script list is empty");
+                    if (serversList.Count() < 1) throw new Exception("Ни один из серверов не выбран.");
+                    if (scriptsList.Count() < 1) throw new Exception("Ни один из скриптов не выбран.");
 
                     Dictionary<string, string> scriptsContent = await GetScripts(connectionString, scriptsList);
                     List<nestedServer> servers = await GetServers(connectionString, serversList);
@@ -131,7 +181,7 @@ namespace SQL_Multi_Flow.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    throw (ex);
                 }
             });
         }
@@ -156,7 +206,7 @@ namespace SQL_Multi_Flow.Infrastructure
 
                     connection.InfoMessage += (object sender, SqlInfoMessageEventArgs e) =>
                     {
-                        raportContext.ExecuteCommand($"INSERT INTO Raports.Info (Data, ServerDB, Script, MessageInfo) VALUES (DEFAULT, 'Server:{package.Server.ServerDomainName} DB:{package.Server.DataBaseName}', '{script}', N'{e.Message}')");
+                        raportContext.ExecuteCommand($"INSERT INTO Raports.Info (DataTime, ServerDB, Script, MessageInfo) VALUES (DEFAULT, 'Server:{package.Server.ServerDomainName} DB:{package.Server.DataBaseName}', '{script}', N'{e.Message}')");
                     };
 
                     bool hasError;
@@ -178,14 +228,14 @@ namespace SQL_Multi_Flow.Infrastructure
                             {
                                 hasError = true;
 
-                                raportContext.ExecuteCommand($"INSERT INTO Raports.Errors (DataTime, ServerDBUserPasswd, ScriptName, ErrorCode, ErrorMessage) VALUES (DEFAULT, 'Server:{package.Server.ServerDomainName} DB:{package.Server.DataBaseName}', '{i.Key}', {ex.Number}, N'{ex.Message}')");
+                                raportContext.ExecuteCommand($"INSERT INTO Raports.Errors (DataTime, ServerDBUserPasswd, ScriptName, ErrorCode, ErrorMessage) VALUES (DEFAULT, 'Server:{package.Server.ServerDomainName} DB:{package.Server.DataBaseName}', '{i.Key}', {ex.Number}, N'System.Data.SqlClient.SqlException: {ex.Message}')");
                             }
 
                             catch (Microsoft.Data.SqlClient.SqlException ex)
                             {
                                 hasError = true;
 
-                                raportContext.ExecuteCommand($"INSERT INTO Raports.Errors (DataTime, ServerDBUserPasswd, ScriptName, ErrorCode, ErrorMessage) VALUES (DEFAULT, 'Server:{package.Server.ServerDomainName} DB:{package.Server.DataBaseName}', '{i.Key}', {ex.Number}, N'{ex.Message}')");
+                                raportContext.ExecuteCommand($"INSERT INTO Raports.Errors (DataTime, ServerDBUserPasswd, ScriptName, ErrorCode, ErrorMessage) VALUES (DEFAULT, 'Server:{package.Server.ServerDomainName} DB:{package.Server.DataBaseName}', '{i.Key}', {ex.Number}, N'Microsoft.Data.SqlClient.SqlException: {ex.Message}')");
                             }
 
 
