@@ -36,6 +36,7 @@
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.инструментыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemDBConnectionSetup = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExpandDB = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -99,7 +100,6 @@
             this.Scripts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.folderBrowserDialogScripts = new System.Windows.Forms.FolderBrowserDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemExpandDB = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -177,6 +177,13 @@
             this.ToolStripMenuItemDBConnectionSetup.Size = new System.Drawing.Size(227, 22);
             this.ToolStripMenuItemDBConnectionSetup.Text = "Настройка соеденения с БД";
             this.ToolStripMenuItemDBConnectionSetup.Click += new System.EventHandler(this.connectionDBConfiguration);
+            // 
+            // toolStripMenuItemExpandDB
+            // 
+            this.toolStripMenuItemExpandDB.Name = "toolStripMenuItemExpandDB";
+            this.toolStripMenuItemExpandDB.Size = new System.Drawing.Size(227, 22);
+            this.toolStripMenuItemExpandDB.Text = "Не запускать";
+            this.toolStripMenuItemExpandDB.Click += new System.EventHandler(this.toolStripMenuItemExpandDB_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -872,13 +879,6 @@
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
-            // toolStripMenuItemExpandDB
-            // 
-            this.toolStripMenuItemExpandDB.Name = "toolStripMenuItemExpandDB";
-            this.toolStripMenuItemExpandDB.Size = new System.Drawing.Size(227, 22);
-            this.toolStripMenuItemExpandDB.Text = "Развернуть БД";
-            this.toolStripMenuItemExpandDB.Click += new System.EventHandler(this.toolStripMenuItemExpandDB_Click);
             // 
             // MainForm
             // 
